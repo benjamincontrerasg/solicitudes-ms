@@ -6,10 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 
-/**
- * Entidad que representa una solicitud de retiro de reciclaje en RutaLimpia.
- * El vecinoId referencia al usuario del microservicio de Autenticación.
- */
 @Entity
 public class Solicitud {
 
@@ -31,11 +27,9 @@ public class Solicitud {
 
     private Long vecinoId;
 
-    /** Constructor vacío requerido por JPA. */
     public Solicitud() {
     }
 
-    /** Constructor con los campos que envía el vecino al crear una solicitud. */
     public Solicitud(String direccion, String tipoResiduo, String horarioPreferido, Long vecinoId) {
         this.direccion = direccion;
         this.tipoResiduo = tipoResiduo;
