@@ -14,31 +14,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controlador REST para las solicitudes de retiro de reciclaje.
+ * Expone los endpoints CRUD y búsquedas por estado, vecino y folio.
+ */
 @RestController
 @RequestMapping("/solicitudes")
 public class SolicitudController {
 
     private final SolicitudService service;
 
+    /** Constructor con inyección del servicio. */
     public SolicitudController(SolicitudService service) {
         this.service = service;
     }
 
-    @PostMapping("/solicitante/{solicitanteId}")
-    public ResponseEntity<Solicitud> guardar(@PathVariable Long solicitanteId, @RequestBody Solicitud solicitud) {
-        if (solicitud.getDescripcion() == null || solicitud.getDescripcion().trim().isEmpty()) {
+    /** Crea una nueva solicitud. Valida que dirección, tipoResiduo y vecinoId no sean nulos ni vacíos. */
+    @PostMapping
+    public ResponseEntity<Solicitud> guardar(@RequestBody Solicitud solicitud) {
+        if (solicitud.getDireccion() == null || solicitud.getDireccion().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return service.guardar(solicitanteId, solicitud)
-                .map(guardada -> ResponseEntity.status(HttpStatus.CREATED).body(guardada))
-                .orElse(ResponseEntity.notFound().build());
+        if (solicitud.getTipoResiduo() == null || solicitud.getTipoResiduo().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (solicitud.getVecinoId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Solicitud guardada = service.guardar(solicitud);
+        return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
     }
 
+    /** Devuelve todas las solicitudes. */
     @GetMapping
     public ResponseEntity<List<Solicitud>> obtenerTodos() {
         return ResponseEntity.ok(service.obtenerTodos());
     }
 
+    /** Busca una solicitud por su id. */
     @GetMapping("/{id}")
     public ResponseEntity<Solicitud> buscaPorId(@PathVariable Long id) {
         return service.buscaPorId(id)
@@ -46,6 +59,7 @@ public class SolicitudController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /** Actualiza una solicitud existente por id. */
     @PutMapping("/{id}")
     public ResponseEntity<Solicitud> actualizar(@PathVariable Long id, @RequestBody Solicitud datos) {
         return service.actualizar(id, datos)
@@ -53,6 +67,7 @@ public class SolicitudController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /** Elimina una solicitud por id. */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         if (service.eliminar(id)) {
@@ -61,13 +76,23 @@ public class SolicitudController {
         return ResponseEntity.notFound().build();
     }
 
+    /** Busca solicitudes por estado. */
     @GetMapping("/estado/{estado}")
     public ResponseEntity<List<Solicitud>> buscarPorEstado(@PathVariable String estado) {
         return ResponseEntity.ok(service.buscarPorEstado(estado));
     }
 
-    @GetMapping("/solicitante/{solicitanteId}")
-    public ResponseEntity<List<Solicitud>> buscarPorSolicitante(@PathVariable Long solicitanteId) {
-        return ResponseEntity.ok(service.buscarPorSolicitante(solicitanteId));
+    /** Busca solicitudes por el id del vecino. */
+    @GetMapping("/vecino/{vecinoId}")
+    public ResponseEntity<List<Solicitud>> buscarPorVecino(@PathVariable Long vecinoId) {
+        return ResponseEntity.ok(service.buscarPorVecino(vecinoId));
+    }
+
+    /** Busca una solicitud por su folio de recepción. */
+    @GetMapping("/folio/{folio}")
+    public ResponseEntity<Solicitud> buscaPorFolio(@PathVariable String folio) {
+        return service.buscaPorFolio(folio)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
