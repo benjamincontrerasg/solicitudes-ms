@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controlador REST para gestionar las operaciones sobre Solicitantes.
- */
 @RestController
 @RequestMapping("/solicitantes")
 public class SolicitanteController {
@@ -27,26 +24,17 @@ public class SolicitanteController {
         this.service = service;
     }
 
-    /**
-     * Crea un nuevo solicitante. Retorna 201 Created.
-     */
     @PostMapping
     public ResponseEntity<Solicitante> guardar(@RequestBody Solicitante solicitante) {
         Solicitante guardado = service.guardar(solicitante);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
-    /**
-     * Obtiene todos los solicitantes registrados. Retorna 200 OK.
-     */
     @GetMapping
     public ResponseEntity<List<Solicitante>> obtenerTodos() {
         return ResponseEntity.ok(service.obtenerTodos());
     }
 
-    /**
-     * Obtiene un solicitante por su ID. Retorna 200 OK o 404 Not Found.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Solicitante> buscaPorId(@PathVariable Long id) {
         return service.buscaPorId(id)
@@ -54,9 +42,6 @@ public class SolicitanteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Actualiza un solicitante existente. Retorna 200 OK o 404 Not Found.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Solicitante> actualizar(@PathVariable Long id, @RequestBody Solicitante datos) {
         return service.actualizar(id, datos)
@@ -64,9 +49,6 @@ public class SolicitanteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Elimina un solicitante por su ID. Retorna 204 No Content o 404 Not Found.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         if (service.eliminar(id)) {
