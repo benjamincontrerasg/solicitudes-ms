@@ -8,9 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 
-/**
- * Entidad que representa un pedido o solicitud realizada por un solicitante.
- */
 @Entity
 public class Solicitud {
 

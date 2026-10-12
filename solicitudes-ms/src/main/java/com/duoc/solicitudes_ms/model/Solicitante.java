@@ -10,9 +10,6 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Entidad que representa a la persona o actor que realiza una solicitud (ej. CONDUCTOR o VECINO).
- */
 @Entity
 public class Solicitante {
 
