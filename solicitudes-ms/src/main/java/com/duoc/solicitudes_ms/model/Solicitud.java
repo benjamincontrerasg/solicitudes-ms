@@ -4,10 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 
+/**
+ * Entidad que representa una solicitud de retiro de reciclaje en RutaLimpia.
+ * El vecinoId referencia al usuario del microservicio de Autenticación.
+ */
 @Entity
 public class Solicitud {
 
@@ -15,26 +17,30 @@ public class Solicitud {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String descripcion;
+    private String folio;
 
     private String direccion;
+
+    private String tipoResiduo;
+
+    private String horarioPreferido;
 
     private String estado;
 
     private LocalDate fechaCreacion;
 
-    @ManyToOne
-    @JoinColumn(name = "solicitante_id")
-    private Solicitante solicitante;
+    private Long vecinoId;
 
+    /** Constructor vacío requerido por JPA. */
     public Solicitud() {
     }
 
-    public Solicitud(String descripcion, String direccion, String estado, LocalDate fechaCreacion) {
-        this.descripcion = descripcion;
+    /** Constructor con los campos que envía el vecino al crear una solicitud. */
+    public Solicitud(String direccion, String tipoResiduo, String horarioPreferido, Long vecinoId) {
         this.direccion = direccion;
-        this.estado = estado;
-        this.fechaCreacion = fechaCreacion;
+        this.tipoResiduo = tipoResiduo;
+        this.horarioPreferido = horarioPreferido;
+        this.vecinoId = vecinoId;
     }
 
     public Long getId() {
@@ -45,12 +51,12 @@ public class Solicitud {
         this.id = id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getFolio() {
+        return folio;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setFolio(String folio) {
+        this.folio = folio;
     }
 
     public String getDireccion() {
@@ -59,6 +65,22 @@ public class Solicitud {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getTipoResiduo() {
+        return tipoResiduo;
+    }
+
+    public void setTipoResiduo(String tipoResiduo) {
+        this.tipoResiduo = tipoResiduo;
+    }
+
+    public String getHorarioPreferido() {
+        return horarioPreferido;
+    }
+
+    public void setHorarioPreferido(String horarioPreferido) {
+        this.horarioPreferido = horarioPreferido;
     }
 
     public String getEstado() {
@@ -77,11 +99,11 @@ public class Solicitud {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Solicitante getSolicitante() {
-        return solicitante;
+    public Long getVecinoId() {
+        return vecinoId;
     }
 
-    public void setSolicitante(Solicitante solicitante) {
-        this.solicitante = solicitante;
+    public void setVecinoId(Long vecinoId) {
+        this.vecinoId = vecinoId;
     }
 }
